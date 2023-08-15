@@ -5,9 +5,6 @@ app.use(express.json())
 
 app.get("/api/topics", getTopics)
 
-app.get("/api/articles", getArticles)  
-
-// app.get("/api/comments", getComments)  
 
 
 app.use((err, request, response, next) => {

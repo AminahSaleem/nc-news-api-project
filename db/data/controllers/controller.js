@@ -1,5 +1,5 @@
 const { allTopics, allArticles } = require('../models/models')
-const {topicData, articleData } = require('../test-data/index')
+const {topicData } = require('../test-data/index')
 
 const getTopics = (request, response, next) => {
     allTopics(topicData).then((topicsData) => {
@@ -10,13 +10,6 @@ const getTopics = (request, response, next) => {
     })
 }
 
-const getArticles = (request, response, next) => {
-    allArticles(articleData).then((articleData) => {
-        response.status(200).send({article: articleData})
-    })
-    .catch((err) => {
-        next(err)
-    })
-}
 
-module.exports = {getTopics, getArticles}
+
+module.exports = {getTopics}
