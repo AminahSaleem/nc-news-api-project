@@ -3,6 +3,7 @@ const connection = require('../db/connection')
 const app = require('../db/data/app')
 const request = require('supertest')
 const seed = require('../db/seeds/seed')
+const jsonEndpoints = require('../endpoints.json')
 
 afterAll(() => connection.end());
 
@@ -24,6 +25,14 @@ describe('GET /api/topics', () => {
     });
     })
 }) 
-
+describe('GET /api', () => {
+    test('GET: 200 should respond with the documentation of endpoints', () => {
+        return request(app).get("/api").expect(200)
+        .then((response) => {
+            const endpoints = response.body
+            expect(endpoints).toEqual(jsonEndpoints)
+        })
+    })
+})
 
   
