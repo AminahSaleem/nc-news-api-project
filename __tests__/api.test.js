@@ -4,6 +4,7 @@ const app = require('../db/data/app')
 const request = require('supertest')
 const seed = require('../db/seeds/seed')
 const jsonEndpoints = require('../endpoints.json')
+const { toLocaleString } = require('../db/data/test-data/users')
 
 afterAll(() => connection.end());
 
@@ -22,7 +23,7 @@ describe('GET /api/topics', () => {
             })
         })
 
-    });
+    })
     })
 }) 
 describe('GET /api', () => {
@@ -35,4 +36,31 @@ describe('GET /api', () => {
     })
 })
 
-  
+describe.only('GET /api/articles', () => {
+    test('GET 200: should return an array of articles', () => {
+        return request(app).get("/api/articles").expect(200)
+        .then((response) => {
+            const {article} = response.body
+            expect(article).toBeInstanceOf(Array)
+            article.forEach(articles => {
+                expect(articles).toMatchObject({
+                    author: expect.any(String),
+                    title: expect.any(String),
+                    article_id: expect.any(Number),
+                    body: expect.any(String),
+                    topic: expect.any(String),
+                    created_at: expect.any(String),
+                    votes: expect.any(Number),
+                    article_img_url: expect.any(String)
+            })
+        })
+    })
+  })
+  test('GET 200: the article should be sorted by date in descending order', () => {
+    return request(app).get("/api/articles").expect(200)
+    .then((response)=> {
+        const {article} = response.body
+
+    })
+  })
+})
