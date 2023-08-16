@@ -1,6 +1,6 @@
 const data = require('../db/data/test-data')
 const connection = require('../db/connection')
-const app = require('../db/data/app')
+const app = require('../app')
 const request = require('supertest')
 const seed = require('../db/seeds/seed')
 const jsonEndpoints = require('../endpoints.json')
@@ -53,6 +53,7 @@ describe('GET /api/articles/:article_id', () => {
       "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
             })
             
+
             })
         })
     test('GET 404: should respond with an error if the article is not found', () => {
@@ -69,4 +70,41 @@ describe('GET /api/articles/:article_id', () => {
             expect(msg).toBe('Bad Request')
         })
     })
+})
+
+describe('GET /api/articles', () => {
+    test('GET 200: should return an array of articles', () => {
+        return request(app).get("/api/articles").expect(200)
+        .then((response) => {
+            const {articles} = response.body
+            expect(articles).toBeInstanceOf(Array)
+            articles.forEach(article => {
+                expect(article).toMatchObject({
+                    author: expect.any(String),
+                    title: expect.any(String),
+                    article_id: expect.any(Number),
+                    topic: expect.any(String),
+                    created_at: expect.any(String),
+                    votes: expect.any(Number),
+                    article_img_url: expect.any(String)
+            })
+        })
+    })
+  })
+  test('GET 200: the article should be sorted by date in descending order', () => {
+    return request(app).get("/api/articles").expect(200)
+    .then(({body})=> {
+        const articles = body.articles
+        expect(articles).toBeSortedBy("created_at", {descending:true})
+    })
+  })
+   test('GET 200: the article should not return the body property on the article objects', () => {
+    return request(app).get("/api/articles").expect(200)
+    .then(({body}) => {
+        const articles = body.articles
+        articles.forEach((article) => {
+            expect(article).not.toHaveProperty('body')
+})
+    })
+})
 })
