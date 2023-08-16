@@ -11,11 +11,11 @@ const getArticlesById = (request, response) => {
     })    
     }
    
-    const getArticle = (request, response) => {
+    const getArticles = (request, response) => {
         allArticles().then((articleData) => {
-            response.status(200).send({article: articleData})
+            response.status(200).send({articles: articleData})
         })
     }
 
 
-module.exports = {getArticlesById, getArticle }
+module.exports = {getArticlesById, getArticles }

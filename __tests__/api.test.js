@@ -1,6 +1,6 @@
 const data = require('../db/data/test-data')
 const connection = require('../db/connection')
-const app = require('../db/data/app')
+const app = require('../app')
 const request = require('supertest')
 const seed = require('../db/seeds/seed')
 const jsonEndpoints = require('../endpoints.json')
@@ -40,10 +40,10 @@ describe('GET /api/articles', () => {
     test('GET 200: should return an array of articles', () => {
         return request(app).get("/api/articles").expect(200)
         .then((response) => {
-            const {article} = response.body
-            expect(article).toBeInstanceOf(Array)
-            article.forEach(articles => {
-                expect(articles).toMatchObject({
+            const {articles} = response.body
+            expect(articles).toBeInstanceOf(Array)
+            articles.forEach(article => {
+                expect(article).toMatchObject({
                     author: expect.any(String),
                     title: expect.any(String),
                     article_id: expect.any(Number),
@@ -58,26 +58,18 @@ describe('GET /api/articles', () => {
   test('GET 200: the article should be sorted by date in descending order', () => {
     return request(app).get("/api/articles").expect(200)
     .then(({body})=> {
-        const articles = body.article
-         for (let i =0; i < articles.length -1; i++){
-            const currentDate = new Date(articles[i].created_at)
-            const nextDate = new Date(articles[i+1].created_at)
-            expect(currentDate >= nextDate).toBe(true)
-         }
+        const articles = body.articles
+        expect(articles).toBeSortedBy("created_at", {descending:true})
     })
   })
    test('GET 200: the article should not return the body property on the article objects', () => {
     return request(app).get("/api/articles").expect(200)
     .then(({body}) => {
-        const articles = body.article
+        const articles = body.articles
         console.log(articles)
         articles.forEach((article) => {
             expect(article).not.toHaveProperty('body')
 })
     })
-})
-test('GET 200: should respond with the total count of comments for the article_id', () => {
-    return request(app).get(`/api/articles/${articleId1}/comments`).expect(200)
-    
 })
 })

@@ -1,5 +1,5 @@
 const { allTopics } = require('../models/models')
-const endpointsData = require('../../../endpoints.json')
+const endpointsData = require('../endpoints.json')
 
 const getTopics = (request, response, next) => {
     allTopics().then((topicsData) => {
