@@ -9,7 +9,6 @@ describe("convertTimestampToDate", () => {
     const timestamp = 1557572706232;
     const input = { created_at: timestamp };
     const result = convertTimestampToDate(input);
-    console.log(result)
     expect(result).not.toBe(input);
     expect(result).toBeObject();
   });

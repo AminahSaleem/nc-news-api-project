@@ -66,7 +66,6 @@ describe('GET /api/articles', () => {
     return request(app).get("/api/articles").expect(200)
     .then(({body}) => {
         const articles = body.articles
-        console.log(articles)
         articles.forEach((article) => {
             expect(article).not.toHaveProperty('body')
 })
