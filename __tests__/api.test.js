@@ -47,7 +47,6 @@ describe('GET /api/articles', () => {
                     author: expect.any(String),
                     title: expect.any(String),
                     article_id: expect.any(Number),
-                    body: expect.any(String),
                     topic: expect.any(String),
                     created_at: expect.any(String),
                     votes: expect.any(Number),
@@ -67,14 +66,18 @@ describe('GET /api/articles', () => {
          }
     })
   })
-  test('GET 200: the article should not return the body property on the article objects', () => {
+   test('GET 200: the article should not return the body property on the article objects', () => {
     return request(app).get("/api/articles").expect(200)
-    .then((response) => {
-        const articles = response.body.article
+    .then(({body}) => {
+        const articles = body.article
         console.log(articles)
         articles.forEach((article) => {
             expect(article).not.toHaveProperty('body')
-        })
+})
     })
-  })
+})
+test('GET 200: should respond with the total count of comments for the article_id', () => {
+    return request(app).get(`/api/articles/${articleId1}/comments`).expect(200)
+    
+})
 })

@@ -16,7 +16,6 @@ const getArticlesById = (request, response) => {
             response.status(200).send({article: articleData})
         })
     }
-    
 
 
 module.exports = {getArticlesById, getArticle }
