@@ -3,10 +3,13 @@ const connection = require('../db/connection')
 const allArticlesById = (article_id) => {
     return connection.query(`SELECT * FROM articles WHERE article_id = $1`, [article_id])
     .then(({rows}) => {
+        if (rows.length === 0) {
+            return Promise.reject({status:404, msg: 'Not Found'})
+        }
         return rows[0] 
     })
-}
-
+    }
+   
 const allArticles = () => {
     return connection.query(`SELECT articles.author, articles.title,articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.*) AS comment_count 
     FROM articles 
@@ -22,3 +25,5 @@ const allArticles = () => {
 
 
 module.exports = {allArticlesById, allArticles }
+     
+

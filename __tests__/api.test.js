@@ -4,7 +4,7 @@ const app = require('../app')
 const request = require('supertest')
 const seed = require('../db/seeds/seed')
 const jsonEndpoints = require('../endpoints.json')
-
+const { toLocaleString } = require('../db/data/test-data/users')
 
 afterAll(() => connection.end());
 
@@ -23,7 +23,7 @@ describe('GET /api/topics', () => {
             })
         })
 
-    });
+    })
     })
 }) 
 describe('GET /api', () => {
@@ -32,6 +32,42 @@ describe('GET /api', () => {
         .then((response) => {
             const endpoints = response.body
             expect(endpoints).toEqual(jsonEndpoints)
+        })
+    })
+})
+
+describe('GET /api/articles/:article_id', () => {
+    test('GET 200: should respond with the articles id', () => {
+        return request(app).get('/api/articles/1').expect(200)
+        .then((response) => {
+            const article = response.body.article
+            expect(article).toEqual({
+                article_id: 1, 
+                title: "Living in the shadow of a great man",
+                topic: "mitch",
+                author: "butter_bridge",
+                body: "I find this existence challenging",
+                created_at: expect.any(String),
+                votes: 100,
+                article_img_url:
+      "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+            })
+            
+
+            })
+        })
+    test('GET 404: should respond with an error if the article is not found', () => {
+        return request(app).get("/api/articles/999").expect(404)
+        .then(({body}) => {
+            const {msg} = body
+            expect(msg).toBe("Not Found")
+        })
+    })
+    test('GET 400: should respond with an error if the article_id is not a number', () => {
+        return request(app).get('/api/articles/mystery').expect(400)
+        .then(({body}) => {
+            const {msg} = body
+            expect(msg).toBe('Bad Request')
         })
     })
 })
