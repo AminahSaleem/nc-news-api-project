@@ -36,31 +36,37 @@ describe('GET /api', () => {
     })
 })
 
-describe.only('GET /api/articles', () => {
-    test('GET 200: should return an array of articles', () => {
-        return request(app).get("/api/articles").expect(200)
+describe('GET /api/articles/:article_id', () => {
+    test('GET 200: should respond with the articles id', () => {
+        return request(app).get('/api/articles/1').expect(200)
         .then((response) => {
-            const {article} = response.body
-            expect(article).toBeInstanceOf(Array)
-            article.forEach(articles => {
-                expect(articles).toMatchObject({
-                    author: expect.any(String),
-                    title: expect.any(String),
-                    article_id: expect.any(Number),
-                    body: expect.any(String),
-                    topic: expect.any(String),
-                    created_at: expect.any(String),
-                    votes: expect.any(Number),
-                    article_img_url: expect.any(String)
+            const article = response.body.article
+            expect(article).toEqual({
+                article_id: 1, 
+                title: "Living in the shadow of a great man",
+                topic: "mitch",
+                author: "butter_bridge",
+                body: "I find this existence challenging",
+                created_at: expect.any(String),
+                votes: 100,
+                article_img_url:
+      "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+            })
+            
             })
         })
+    test('GET 404: should respond with an error if the article is not found', () => {
+        return request(app).get("/api/articles/999").expect(404)
+        .then(({body}) => {
+            const {msg} = body
+            expect(msg).toBe("Not Found")
+        })
     })
-  })
-  test('GET 200: the article should be sorted by date in descending order', () => {
-    return request(app).get("/api/articles").expect(200)
-    .then((response)=> {
-        const {article} = response.body
-
+    test('GET 400: should respond with an error if the article_id is not a number', () => {
+        return request(app).get('/api/articles/mystery').expect(400)
+        .then(({body}) => {
+            const {msg} = body
+            expect(msg).toBe('Bad Request')
+        })
     })
-  })
 })
