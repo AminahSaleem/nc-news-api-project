@@ -1,4 +1,4 @@
-const {allArticlesById, allArticles} = require('../models/articles.models')
+const {allArticlesById, allArticles, fetchArticleComments} = require('../models/articles.models')
 
 const getArticlesById = (request, response, next) => {
     const article_id = parseInt(request.params.article_id)
@@ -16,5 +16,13 @@ const getArticlesById = (request, response, next) => {
         })
     }
 
+    const getArticleComments = (request, response, next) =>{
+        const {article_id} = request.params
+        fetchArticleComments(article_id).then((comments) => {
+            response.status(200).send({comments: comments})
+        }).catch((err) => {
+            next(err)
+        })
+    }
 
-module.exports = {getArticlesById, getArticles }
+module.exports = {getArticlesById, getArticles, getArticleComments }
