@@ -22,8 +22,16 @@ const allArticles = () => {
     })
 }
 
+const fetchArticleComments = (article_id) => {
+    return allArticlesById(article_id).then(()=>{
+         return connection.query(`SELECT * FROM comments WHERE article_id = $1 ORDER BY created_at DESC`, [article_id])
+    })
+    .then(({rows}) => {
+        return rows
+    })
+}
 
 
-module.exports = {allArticlesById, allArticles }
+module.exports = {allArticlesById, allArticles, fetchArticleComments }
      
 
