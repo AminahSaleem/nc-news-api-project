@@ -158,3 +158,67 @@ describe('GET /api/articles/:article_id/comments', () => {
         })
         })
  
+describe('POST /api/articles/:articles_id/comments', () => {
+    test('POST 201: should respond with an added comment to the article', () => {
+            const addedComment = {
+                    username: "butter_bridge",
+                    body: "Test comment"
+                };
+            return request(app).post("/api/articles/1/comments").send(addedComment).expect(201)
+            .then(({body}) => {
+                const {comment} = body
+                expect(comment).toMatchObject({
+                        author: "butter_bridge",
+                        body: "Test comment",
+                        comment_id: expect.any(Number)
+                    })
+                })
+            })
+        test('POST 400: should return bad request if there is a missing field', ()=>{
+            const newComment = {
+                body: 'Missing field'
+            }
+            return request(app).post("/api/articles/1/comments").send(newComment).expect(400)
+            .then(({body}) => {
+                const {msg} = body
+                expect(msg).toEqual('Bad Request')
+            })
+        })
+        test('POST 201: should respond with a 201 when sending extra properties', () => {
+            const newComment = {
+                username: "butter_bridge",
+                body: 'Test comment',
+                extra: 'extra'
+            }
+            return request(app).post("/api/articles/1/comments").send(newComment).expect(201)
+            .then(({body})=>{
+                const {comment} = body
+                expect(comment).toMatchObject({
+                author: "butter_bridge",
+                body: 'Test comment'
+                })
+            })
+        })
+        test('POST 400: should respond with an error if the username does not exist', () => {
+            const newComment = {
+                username: 'Aminah',
+                body: 'Test'
+            }
+            return request(app).post('/api/articles/1/comments').send(newComment).expect(400)
+            .then(({body})=>{
+                const {msg} = body
+                expect(msg).toEqual('Bad Request')
+            })
+        })
+        test('POST 404: should respond with an error if the article_id is valid but doesnt exist', () => {
+            const newComment = {
+                username: "butter_bridge",
+                body: 'Test'
+            }
+            return request(app).post("/api/articles/999/comments").send(newComment).expect(404)
+            .then(({body}) => {
+                const {msg} = body
+                expect(msg).toEqual('Not Found')
+            })
+        })
+        })
