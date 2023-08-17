@@ -184,13 +184,20 @@ describe('POST /api/articles/:articles_id/comments', () => {
                 expect(msg).toEqual('Bad Request')
             })
         })
-        test('POST 200: should respond with a 201 when sending extra properties', () => {
+        test('POST 201: should respond with a 201 when sending extra properties', () => {
             const newComment = {
                 username: "butter_bridge",
                 body: 'Test comment',
                 extra: 'extra'
             }
             return request(app).post("/api/articles/1/comments").send(newComment).expect(201)
+            .then(({body})=>{
+                const {comment} = body
+                expect(comment).toMatchObject({
+                author: "butter_bridge",
+                body: 'Test comment'
+                })
+            })
         })
         test('POST 400: should respond with an error if the username does not exist', () => {
             const newComment = {
