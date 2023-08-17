@@ -40,6 +40,13 @@ const postComments = ({ article_id, username, body }) => {
     }) 
 }
 
-module.exports = {allArticlesById, allArticles, fetchArticleComments, postComments }
+const deletedByCommentId = (comment_id) => {
+    return connection.query(`DELETE FROM comments WHERE comment_id = $1`, [comment_id])
+    .then(({rows}) => {
+        return rows
+    })
+}
+
+module.exports = {allArticlesById, allArticles, fetchArticleComments, postComments, deletedByCommentId }
      
 

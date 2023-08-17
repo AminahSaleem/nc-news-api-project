@@ -222,3 +222,12 @@ describe('POST /api/articles/:articles_id/comments', () => {
             })
         })
         })
+
+describe('DELETE /api/comments/:comment_id', () => {
+    test('DELETE 204: should delete the given comment by comment_id', () => {
+        return request(app).delete('/api/comments/1').expect(204).then(() =>{
+            return request(app).get('/api/comments/1').expect(404)
+        })
+       
+    })
+})
