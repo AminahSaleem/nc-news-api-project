@@ -178,10 +178,40 @@ describe('POST /api/articles/:articles_id/comments', () => {
             const newComment = {
                 body: 'Missing field'
             }
-            return request(app).post("/api/articles/999/comments").send(newComment).expect(400)
+            return request(app).post("/api/articles/1/comments").send(newComment).expect(400)
             .then(({body}) => {
                 const {msg} = body
                 expect(msg).toEqual('Bad Request')
+            })
+        })
+        test('POST 200: should respond with a 201 when sending extra properties', () => {
+            const newComment = {
+                username: "butter_bridge",
+                body: 'Test comment',
+                extra: 'extra'
+            }
+            return request(app).post("/api/articles/1/comments").send(newComment).expect(201)
+        })
+        test('POST 400: should respond with an error if the username does not exist', () => {
+            const newComment = {
+                username: 'Aminah',
+                body: 'Test'
+            }
+            return request(app).post('/api/articles/1/comments').send(newComment).expect(400)
+            .then(({body})=>{
+                const {msg} = body
+                expect(msg).toEqual('Bad Request')
+            })
+        })
+        test('POST 404: should respond with an error if the article_id is valid but doesnt exist', () => {
+            const newComment = {
+                username: "butter_bridge",
+                body: 'Test'
+            }
+            return request(app).post("/api/articles/999/comments").send(newComment).expect(404)
+            .then(({body}) => {
+                const {msg} = body
+                expect(msg).toEqual('Not Found')
             })
         })
         })
