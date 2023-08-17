@@ -174,4 +174,14 @@ describe('POST /api/articles/:articles_id/comments', () => {
                     })
                 })
             })
+        test('POST 400: should return bad request if there is a missing field', ()=>{
+            const newComment = {
+                body: 'Missing field'
+            }
+            return request(app).post("/api/articles/999/comments").send(newComment).expect(400)
+            .then(({body}) => {
+                const {msg} = body
+                expect(msg).toEqual('Bad Request')
+            })
+        })
         })

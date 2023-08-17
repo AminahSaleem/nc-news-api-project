@@ -27,14 +27,11 @@ const getArticlesById = (request, response, next) => {
 
     const addComments = (request, response, next ) => {
         const { article_id } = request.params
-        console.log(request.params)
         const { username, body } = request.body
-        console.log(request.body)
         postComments({article_id, username, body})
         .then((comment)=> {
             response.status(201).send({ comment })
         }).catch((err) => {
-            console.log(err)
             next(err)
             })
         }
