@@ -206,4 +206,14 @@ describe('PATCH /api/articles/:article_id', () => {
            expect(msg).toEqual('Not Found')
         })
     })
+    test('PATCH 400: should respond with an error if the inc_vote is valid but the article_id is invalid', () => {
+        const updatedVotes = {
+            inc_votes: 1
+        }
+        return request(app).patch("/api/articles/chickenburger").send(updatedVotes).expect(400)
+        .then(({body}) => {
+            const {msg} = body 
+            expect(msg).toEqual('Bad Request')
+        })
+    })
 })
