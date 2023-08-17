@@ -158,3 +158,52 @@ describe('GET /api/articles/:article_id/comments', () => {
         })
         })
  
+
+describe('PATCH /api/articles/:article_id', () => {
+    test('PATCH: 200 should respond with an updated article with updated votes', () => {
+        const updatedVotes = {
+            inc_votes:1
+        }
+        return request(app).patch("/api/articles/1").send(updatedVotes).expect(200)
+        .then(({body}) => {
+            const {articles} = body
+            expect(articles).toMatchObject({
+                article_id: 1,
+                votes: 101
+            })
+        })
+    })
+    test('PATCH: 200 should respond with updated votes if it is a negative number', () => {
+        const updatedVotes = {
+            inc_votes:-5
+        }
+        return request(app).patch("/api/articles/1").send(updatedVotes).expect(200)
+        .then(({body}) => {
+            const {articles} = body
+            expect(articles).toMatchObject({
+                article_id: 1,
+                votes: 95
+            })
+        })
+    })
+    test('PATCH: 400 should respond with an error if the inc_votes is not a number', () => {
+        const updatedVotes = {
+            inc_votes: "invalid vote"
+        }
+        return request(app).patch("/api/articles/1").send(updatedVotes).expect(400)
+        .then(({body}) => {
+           const {msg} = body
+           expect(msg).toEqual('Bad Request')
+        })
+    })
+    test('PATCH: 404 should respond with an error if the article_id is valid but non-existent', () => {
+        const updatedVotes = {
+            inc_votes: 1
+        }
+        return request(app).patch("/api/articles/999").send(updatedVotes).expect(404)
+        .then(({body}) => {
+           const {msg} = body
+           expect(msg).toEqual('Not Found')
+        })
+    })
+})
