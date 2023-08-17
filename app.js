@@ -15,6 +15,7 @@ app.get("/api/articles/:article_id", getArticlesById)
 
 app.get("/api/articles/:article_id/comments", getArticleComments)
 
+
 app.use((err, request, response, next) => {
     if (err.status && err.msg) {
       response.status(err.status).send({ msg: err.msg})

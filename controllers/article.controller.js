@@ -19,10 +19,10 @@ const getArticlesById = (request, response, next) => {
     const getArticleComments = (request, response, next) =>{
         const {article_id} = request.params
         fetchArticleComments(article_id).then((comments) => {
-            response.status(200).send({comments: comments})
-        }).catch((err) => {
+            response.status(200).send({comments:comments})
+        }).catch((err)=>{
             next(err)
         })
-    }
+        }
 
 module.exports = {getArticlesById, getArticles, getArticleComments }

@@ -143,10 +143,17 @@ describe('GET /api/articles/:article_id/comments', () => {
             })
         })
         test('GET: 400 responds with a bad request error if there is no article_id', () => {
-            return request(app).get("/api/articles/comments").expect(400)
+            return request(app).get("/api/articles/mystery/comments").expect(400)
             .then(({body})=>{
                 const {msg} = body
                 expect(msg).toEqual("Bad Request")
+            })
+        })
+        test('GET 200: should respond with an empty array for an article that does exist but no comments', () => {
+            return request(app).get("/api/articles/13/comments").expect(200)
+            .then(({body})=>{
+                const {comments} = body
+                expect(comments).toEqual([])
             })
         })
         })
