@@ -158,3 +158,20 @@ describe('GET /api/articles/:article_id/comments', () => {
         })
         })
  
+describe('POST /api/articles/:articles_id/comments', () => {
+    test('POST 201: should respond with an added comment to the article', () => {
+            const addedComment = {
+                    username: "butter_bridge",
+                    body: "Test comment"
+                };
+            return request(app).post("/api/articles/1/comments").send(addedComment).expect(201)
+            .then(({body}) => {
+                const {comment} = body
+                expect(comment).toMatchObject({
+                        author: "butter_bridge",
+                        body: "Test comment",
+                        comment_id: expect.any(Number)
+                    })
+                })
+            })
+        })

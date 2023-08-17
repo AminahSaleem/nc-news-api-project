@@ -30,8 +30,14 @@ const fetchArticleComments = (article_id) => {
         return rows
     })
 }
+const postComments = ({ article_id, username, body }) => {
+    return connection.query(`INSERT INTO comments (article_id, author, body) VALUES ($1, $2, $3) RETURNING *`,
+    [article_id, username, body]
+    ).then(({rows}) => {
+        return rows[0];
+    })
+}
 
-
-module.exports = {allArticlesById, allArticles, fetchArticleComments }
+module.exports = {allArticlesById, allArticles, fetchArticleComments, postComments }
      
 
