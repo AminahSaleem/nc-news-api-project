@@ -66,7 +66,18 @@ const updateArticles = (article_id, inc_votes) =>{
     })
 })
 }
-module.exports = {allArticlesById, allArticles, fetchArticleComments, postComments, updateArticles, deletedByCommentId, checkCommentExists}
+
+const fetchUsers = () => {
+    return connection.query(`SELECT * FROM users`)
+    .then(({rows}) => {
+        if (rows.length === 0) {
+            return Promise.reject({status:404, msg: 'Not Found'})
+        }
+        return rows
+    })
+    }
+
+module.exports = {allArticlesById, allArticles, fetchArticleComments, postComments, updateArticles, deletedByCommentId, checkCommentExists, fetchUsers}
 
 
 
