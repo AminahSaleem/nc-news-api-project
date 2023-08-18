@@ -317,6 +317,7 @@ describe('GET /api/users', () => {
        .then((response) => {
            const {users}= response.body
            expect(users).toBeInstanceOf(Array)
+           expect(users).toHaveLength(4)
            users.forEach(user => {
                expect(user).toMatchObject({
                    username: expect.any(String),
