@@ -1,6 +1,4 @@
 
-const {allArticlesById, allArticles, fetchArticleComments, updateArticles} = require('../models/articles.models')
-
 const {allArticlesById, allArticles, fetchArticleComments, postComments, updateArticles} = require('../models/articles.models')
 
 
@@ -40,7 +38,7 @@ const getArticlesById = (request, response, next) => {
         })
     }
 
-module.exports = {getArticlesById, getArticles, getArticleComments, patchArticles, addComments }
+
 
     const addComments = (request, response, next ) => {
         const { article_id } = request.params
@@ -52,5 +50,6 @@ module.exports = {getArticlesById, getArticles, getArticleComments, patchArticle
             next(err)
             })
         }
-module.exports = {getArticlesById, getArticles, getArticleComments, addComments }
+module.exports = {getArticlesById, getArticles, getArticleComments, patchArticles, addComments }
+
 
