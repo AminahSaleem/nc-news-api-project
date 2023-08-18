@@ -1,5 +1,5 @@
 
-const {allArticlesById, allArticles, fetchArticleComments, postComments, updateArticles} = require('../models/articles.models')
+const {allArticlesById, allArticles, fetchArticleComments, postComments,updateArticles, deletedByCommentId, checkCommentExists} = require('../models/articles.models')
 
 
 const getArticlesById = (request, response, next) => {
@@ -50,6 +50,18 @@ const getArticlesById = (request, response, next) => {
             next(err)
             })
         }
-module.exports = {getArticlesById, getArticles, getArticleComments, patchArticles, addComments }
+
+    const deleteComments = (request, response, next) => {
+        const {comment_id} = request.params
+        checkCommentExists(comment_id).then(() => {
+            return deletedByCommentId(comment_id)
+        }).then(() => {
+            response.sendStatus(204)
+        }).catch((err) => {
+            next(err)
+        }) 
+        }
+
+module.exports = {getArticlesById, getArticles, getArticleComments, addComments, deleteComments, patchArticles }
 
 
