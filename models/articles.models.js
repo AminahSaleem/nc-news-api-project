@@ -10,17 +10,25 @@ const allArticlesById = (article_id) => {
     })
     }
    
-const allArticles = () => {
-    return connection.query(`SELECT articles.author, articles.title,articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.*) AS comment_count 
-    FROM articles 
-    LEFT JOIN comments
-    ON articles.article_id = comments.article_id
-    GROUP BY articles.article_id
-    ORDER BY created_at desc`)
-    .then(({rows}) => {
-        return rows 
-    })
-}
+
+    const allArticles = (topic) => {
+        let query = `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.*) AS comment_count 
+                     FROM articles 
+                     LEFT JOIN comments
+                     ON articles.article_id = comments.article_id`;
+    
+        if (topic) {
+            query += ` WHERE articles.topic = '${topic}'`;
+        }
+    
+        query += ` GROUP BY articles.article_id
+                   ORDER BY created_at desc`;
+    
+        return connection.query(query)
+            .then(({ rows }) => {
+                return rows;
+            });
+    };
 
 const fetchArticleComments = (article_id) => {
     return allArticlesById(article_id).then(()=>{

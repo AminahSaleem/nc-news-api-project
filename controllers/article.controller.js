@@ -13,7 +13,8 @@ const getArticlesById = (request, response, next) => {
     }
    
     const getArticles = (request, response) => {
-        allArticles().then((articleData) => {
+        const {topic} = request.query
+        allArticles(topic).then((articleData) => {
             response.status(200).send({articles: articleData})
         })
     }

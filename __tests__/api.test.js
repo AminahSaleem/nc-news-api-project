@@ -329,3 +329,39 @@ describe('GET /api/users', () => {
     })   
 })
 
+describe('GET /api/articles', () => {
+    test('GET 200: should respond with an array of articles', () => {
+        return request(app).get('/api/articles').expect(200)
+        .then((response) => {
+            const {articles} = response.body 
+            expect(articles).toHaveLength(13)
+            articles.forEach(article => {
+              expect(article).toMatchObject({
+                article_id: expect.any(Number),
+                title: expect.any(String),
+                topic: expect.any(String),
+                author: expect.any(String),
+                created_at: expect.any(String),
+                votes: expect.any(Number),
+                article_img_url: expect.any(String) 
+            })   
+            })
+        })
+    })
+    test('GET 200: should filter out by topics', () => {
+        return request(app).get("/api/articles?topic=cats").expect(200)
+        .then((response) => {
+            const {articles} = response.body
+            articles.forEach(article => {
+                expect(article.topic).toEqual("cats")
+            })
+        })
+    })
+    test('GET 200: should respond with all articles if the query is omitted', () => {
+        return request(app).get('/api/articles?topics').expect(200)
+        .then(({body}) => {
+            const {articles} = body
+            expect(body).toEqual({articles})
+        })
+    })
+})
