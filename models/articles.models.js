@@ -40,6 +40,18 @@ const postComments = ({ article_id, username, body }) => {
     }) 
 }
 
-module.exports = {allArticlesById, allArticles, fetchArticleComments, postComments }
+
+const updateArticles = (article_id, inc_votes) =>{
+    return allArticlesById(article_id).then(()=>{
+    return connection.query(`UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *`, [inc_votes, article_id])
+    .then(({rows}) => {
+        return rows[0]
+    })
+})
+}
+
+
+module.exports = {allArticlesById, allArticles, fetchArticleComments, postComments, updateArticles }
+
      
 

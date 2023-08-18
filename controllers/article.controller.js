@@ -1,4 +1,8 @@
-const {allArticlesById, allArticles, fetchArticleComments, postComments} = require('../models/articles.models')
+
+const {allArticlesById, allArticles, fetchArticleComments, updateArticles} = require('../models/articles.models')
+
+const {allArticlesById, allArticles, fetchArticleComments, postComments, updateArticles} = require('../models/articles.models')
+
 
 const getArticlesById = (request, response, next) => {
     const article_id = parseInt(request.params.article_id)
@@ -25,6 +29,19 @@ const getArticlesById = (request, response, next) => {
         })
         }
 
+
+    const patchArticles = (request, response, next) =>{
+        const {article_id} = request.params
+        const {inc_votes} = request.body
+        updateArticles(article_id, inc_votes).then((updatedArticle) =>{
+            response.status(200).send({articles: updatedArticle})
+        }).catch((err) => {
+            next(err)
+        })
+    }
+
+module.exports = {getArticlesById, getArticles, getArticleComments, patchArticles, addComments }
+
     const addComments = (request, response, next ) => {
         const { article_id } = request.params
         const { username, body } = request.body
@@ -36,3 +53,4 @@ const getArticlesById = (request, response, next) => {
             })
         }
 module.exports = {getArticlesById, getArticles, getArticleComments, addComments }
+
