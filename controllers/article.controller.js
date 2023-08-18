@@ -1,4 +1,4 @@
-const {allArticlesById, allArticles, fetchArticleComments, postComments, deletedByCommentId} = require('../models/articles.models')
+const {allArticlesById, allArticles, fetchArticleComments, postComments, deletedByCommentId, checkCommentExists} = require('../models/articles.models')
 
 const getArticlesById = (request, response, next) => {
     const article_id = parseInt(request.params.article_id)
@@ -37,11 +37,13 @@ const getArticlesById = (request, response, next) => {
         }
     const deleteComments = (request, response, next) => {
         const {comment_id} = request.params
-        deletedByCommentId(comment_id)
-        .then(() => {
+        checkCommentExists(comment_id).then(() => {
+            return deletedByCommentId(comment_id)
+        }).then(() => {
             response.sendStatus(204)
         }).catch((err) => {
             next(err)
-        })
-    }
+        }) 
+        }
+
 module.exports = {getArticlesById, getArticles, getArticleComments, addComments, deleteComments }

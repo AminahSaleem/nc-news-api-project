@@ -40,6 +40,14 @@ const postComments = ({ article_id, username, body }) => {
     }) 
 }
 
+const checkCommentExists = (comment_id) => {
+    return connection.query(`SELECT * FROM comments WHERE comment_id = $1`, [comment_id])
+    .then(({rows}) => {
+        if (rows.length === 0) {
+            return Promise.reject({status:404, msg: 'Not Found'})
+        }
+    })
+    }
 const deletedByCommentId = (comment_id) => {
     return connection.query(`DELETE FROM comments WHERE comment_id = $1`, [comment_id])
     .then(({rows}) => {
@@ -47,6 +55,6 @@ const deletedByCommentId = (comment_id) => {
     })
 }
 
-module.exports = {allArticlesById, allArticles, fetchArticleComments, postComments, deletedByCommentId }
+module.exports = {allArticlesById, allArticles, fetchArticleComments, postComments, deletedByCommentId, checkCommentExists}
      
 

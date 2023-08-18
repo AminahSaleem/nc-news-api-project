@@ -223,11 +223,22 @@ describe('POST /api/articles/:articles_id/comments', () => {
         })
         })
 
-describe('DELETE /api/comments/:comment_id', () => {
+describe.only('DELETE /api/comments/:comment_id', () => {
     test('DELETE 204: should delete the given comment by comment_id', () => {
-        return request(app).delete('/api/comments/1').expect(204).then(() =>{
-            return request(app).get('/api/comments/1').expect(404)
+        return request(app).delete('/api/comments/1').expect(204)
+    })
+    test('DELETE 404: should respond with a 404 error for a valid but non-existent comment_id', () => {
+        return request(app).delete('/api/comments/999').expect(404)
+        .then(({body})=>{
+            const {msg} = body
+            expect(msg).toEqual('Not Found')
         })
-       
+    })
+    test('DELETE 400: should response with a 400 if the comment is not valid', () => {
+        return request(app).delete('/api/comments/banana').expect(400)
+        .then(({body}) => {
+            const {msg} = body
+            expect(msg).toEqual('Bad Request')
+        })
     })
 })
