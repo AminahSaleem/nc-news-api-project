@@ -49,6 +49,7 @@ describe('GET /api/articles/:article_id', () => {
                 body: "I find this existence challenging",
                 created_at: expect.any(String),
                 votes: 100,
+                comment_count: '11',
                 article_img_url:
       "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
             })
@@ -400,3 +401,14 @@ describe('GET /api/articles', () => {
         })
     })
 })
+
+describe('GET /api/articles/:article_id', () => {
+    test('GET 200: should respond with the article including its comment count', () => {
+        return request(app).get(`/api/articles/9`).expect(200)
+        .then((response) => {
+            const {article} = response.body
+                expect(article).toHaveProperty('comment_count')
+                expect(article.comment_count).toEqual('2')
+            })
+        })
+    })
