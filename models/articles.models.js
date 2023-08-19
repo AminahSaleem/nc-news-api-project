@@ -1,14 +1,17 @@
 const connection = require('../db/connection')
 
 const allArticlesById = (article_id) => {
-    return connection.query(`SELECT * FROM articles WHERE article_id = $1`, [article_id])
-    .then(({rows}) => {
-        if (rows.length === 0) {
-            return Promise.reject({status:404, msg: 'Not Found'})
-        }
-        return rows[0] 
-    })
-    }
+    return connection
+    .query(`SELECT articles.*, (SELECT COUNT(comment_id) FROM comments WHERE comments.article_id = articles.article_id) AS comment_count
+      FROM articles
+      WHERE articles.article_id = $1;`, [article_id])
+    .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({ status: 404, msg: 'Not Found' });
+      }
+      return rows[0];
+    });
+};
    
 
     const allArticles = (topic, sort_by = "created_at", order = "desc" ) => {
