@@ -4,7 +4,6 @@ const {allArticlesById, allArticles, fetchArticleComments, postComments,updateAr
 
 const getArticlesById = (request, response, next) => {
     const article_id = parseInt(request.params.article_id)
-    console.log(request.params)
          allArticlesById(article_id).then((article) => {
         response.status(200).send({article: article})
     }).catch((err) => {
