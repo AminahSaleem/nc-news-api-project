@@ -358,10 +358,45 @@ describe('GET /api/articles', () => {
         })
     })
     test('GET 200: should respond with all articles if the query is omitted', () => {
-        return request(app).get('/api/articles?topics').expect(200)
+        return request(app).get('/api/articles?topic').expect(200)
         .then(({body}) => {
             const {articles} = body
-            expect(body).toEqual({articles})
+            expect(articles).toHaveLength(13)
+        })
+    })
+    test('GET 200: should respond with articles sorted by date', () => {
+        return request(app).get("/api/articles?sort_by=created_at").expect(200)
+        .then(({body}) => {
+            const {articles} = body
+            expect(articles).toBeSortedBy("created_at", {descending:true})
+        })
+    })
+    test('GET 400: should respond with bad request if query doesnt exist', () => {
+        return request(app).get("/api/articles?sort_by=banana").expect(400)
+        .then(({body}) =>{
+            const {msg} = body
+            expect(msg).toEqual("Bad Request")
+        })
+    })
+    test('GET 200: should responsd with created_at in ascending order', () =>{
+        return request(app).get('/api/articles?order=asc').expect(200)
+        .then(({body}) => {
+            const {articles} = body
+            expect(articles).toBeSortedBy('created_at', {ascending:true})
+        })
+    })
+    test('GET 400: responds with an error if the order is an unacceptable argument', () => {
+        return request(app).get('/api/articles?order=yellow').expect(400)
+        .then(({body})=>{
+            const {msg} = body
+            expect(msg).toEqual('Bad Request')
+        })
+    })
+    test('GET 404: should respond with an error if the topic doesnt exist', () => {
+        return request(app).get('/api/articles?topic=cow').expect(404)
+        .then(({body}) => {
+            const {msg} = body
+            expect(msg).toEqual('Not Found')
         })
     })
 })

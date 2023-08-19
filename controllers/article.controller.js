@@ -12,11 +12,12 @@ const getArticlesById = (request, response, next) => {
     })    
     }
    
-    const getArticles = (request, response) => {
-        const {topic} = request.query
-        allArticles(topic).then((articleData) => {
+    const getArticles = (request, response, next) => {
+        const {topic, sort_by, order} = request.query
+        allArticles(topic, sort_by, order).then((articleData) => {
             response.status(200).send({articles: articleData})
-        })
+        }).catch((err) => 
+        next(err))
     }
 
     const getArticleComments = (request, response, next) =>{
