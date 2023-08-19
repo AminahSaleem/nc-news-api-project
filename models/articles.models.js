@@ -10,17 +10,39 @@ const allArticlesById = (article_id) => {
     })
     }
    
-const allArticles = () => {
-    return connection.query(`SELECT articles.author, articles.title,articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.*) AS comment_count 
-    FROM articles 
-    LEFT JOIN comments
-    ON articles.article_id = comments.article_id
-    GROUP BY articles.article_id
-    ORDER BY created_at desc`)
-    .then(({rows}) => {
-        return rows 
-    })
-}
+
+    const allArticles = (topic, sort_by = "created_at", order = "desc" ) => {
+        const acceptedSorts = ["title", "topic", "author", "body", "created_at"]
+        const acceptedOrder = ["asc", "desc"]
+
+        if(!acceptedSorts.includes(sort_by)){
+            return Promise.reject({status:400, msg: "Bad Request"})
+        }
+        if(!acceptedOrder.includes(order)) {
+            return Promise.reject({status:400, msg: "Bad Request"})
+        }
+
+        let query = `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.*) AS comment_count 
+                     FROM articles 
+                     LEFT JOIN comments
+                     ON articles.article_id = comments.article_id`;
+    
+        if (topic) {
+            query += ` WHERE articles.topic = '${topic}'`;
+        }
+    
+        query += ` GROUP BY articles.article_id
+                   ORDER BY ${sort_by} ${order}`;
+    
+        return connection.query(query)
+            .then((result) => {
+                if (result.rows.length === 0) {
+                  return Promise.reject({ status: 404, msg: "Not Found" });
+                } else {
+                  return result.rows;
+                }
+            });
+    };
 
 const fetchArticleComments = (article_id) => {
     return allArticlesById(article_id).then(()=>{
