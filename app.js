@@ -5,6 +5,8 @@ const {getArticles, getArticlesById, getArticleComments, patchArticles, addComme
 
 const app = express()
 app.use(express.json())
+const cors = require('cors');
+app.use(cors());
 
 
 app.get("/api/topics", getTopics)
