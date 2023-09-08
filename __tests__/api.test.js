@@ -400,6 +400,24 @@ describe('GET /api/articles', () => {
             expect(msg).toEqual('Not Found')
         })
     })
+    test('GET 200: should respond with articles sorted by votes in descending order', () => {
+        return request(app)
+          .get("/api/articles?sort_by=votes")
+          .expect(200)
+          .then(({ body }) => {
+            const { articles } = body;
+            expect(articles).toBeSortedBy("votes", { descending: true });
+          });
+      }); 
+      test('GET 200: should respond with articles sorted by votes in ascending order', () => {
+        return request(app)
+          .get("/api/articles?sort_by=votes&order=asc")
+          .expect(200)
+          .then(({ body }) => {
+            const { articles } = body;
+            expect(articles).toBeSortedBy("votes", {ascending:true});
+          });
+      });
 })
 
 describe('GET /api/articles/:article_id', () => {

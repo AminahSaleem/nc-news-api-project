@@ -15,7 +15,7 @@ const allArticlesById = (article_id) => {
    
 
     const allArticles = (topic, sort_by = "created_at", order = "desc" ) => {
-        const acceptedSorts = ["title", "topic", "author", "body", "created_at"]
+        const acceptedSorts = ["title", "topic", "author", "body", "created_at", "votes", "comment_count"]
         const acceptedOrder = ["asc", "desc"]
 
         if(!acceptedSorts.includes(sort_by)){
