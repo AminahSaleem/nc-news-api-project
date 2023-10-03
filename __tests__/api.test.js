@@ -379,7 +379,7 @@ describe('GET /api/articles', () => {
             expect(msg).toEqual("Bad Request")
         })
     })
-    test('GET 200: should responsd with created_at in ascending order', () =>{
+    test('GET 200: should respond with created_at in ascending order', () =>{
         return request(app).get('/api/articles?order=asc').expect(200)
         .then(({body}) => {
             const {articles} = body
@@ -400,24 +400,24 @@ describe('GET /api/articles', () => {
             expect(msg).toEqual('Not Found')
         })
     })
-    test('GET 200: should respond with articles sorted by votes in descending order', () => {
+    test('GET 200: should respond with articles sorted by votes in ascending order', () => {
         return request(app)
           .get("/api/articles?sort_by=votes")
           .expect(200)
           .then(({ body }) => {
             const { articles } = body;
-            expect(articles).toBeSortedBy("votes", { descending: true });
+            expect(articles).toBeSortedBy("votes",{descending:true});
           });
-      }); 
-      test('GET 200: should respond with articles sorted by votes in ascending order', () => {
+      });
+    test('GET 200: should respond with articles sorted by votes in ascending order', () => {
         return request(app)
           .get("/api/articles?sort_by=votes&order=asc")
           .expect(200)
           .then(({ body }) => {
             const { articles } = body;
-            expect(articles).toBeSortedBy("votes", {ascending:true});
+            expect(articles).toBeSortedBy("votes", { ascending: true });
           });
-      });
+      }); 
 })
 
 describe('GET /api/articles/:article_id', () => {
@@ -430,3 +430,31 @@ describe('GET /api/articles/:article_id', () => {
             })
         })
     })
+    describe("/api/users/:username", () => {
+        test("GET 200: should return the user with a correct username", () => {
+          const testUser = "butter_bridge";
+          return request(app)
+            .get(`/api/users/${testUser}`)
+            .expect(200)
+            .then(({ body }) => {
+                console.log(body)
+              const { user } = body;
+              expect(user).toMatchObject({
+                username: 'butter_bridge',
+                name: 'jonny',
+                avatar_url:
+                  'https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg'
+              });
+            });
+        });
+        test("GET 404: should return an error if passed a username which does not exist", () => {
+            const testUser = "aminah";
+            return request(app)
+              .get(`/api/users/${testUser}`)
+              .expect(404)
+              .then(({ body }) => {
+                expect(body.msg).toBe("Username doesn't exist");
+              });
+          });
+        });
+
